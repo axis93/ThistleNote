@@ -1,0 +1,20 @@
+<html>
+	{% extends "base.html" %}
+	{% block title %} Login {% endblock %}
+	{% block content %}
+	<div id="login-form">
+		<form id="log"i action="/login"  method="POST">
+			
+			<label>Username </label>
+			<input type="text" name="username" placeholder="Username" value="{{ request.form.username }}">
+			<br>
+			<label>Password</label>
+			<input type="password" name="Password" placeholder="Password" value="{{ request.form.password }}">
+
+			<button type="submit"> Login </button>
+
+	</div>
+
+
+	{% endblock %}
+</html>
