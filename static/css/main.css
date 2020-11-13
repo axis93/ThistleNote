@@ -1,8 +1,6 @@
 body {
   margin: 0;
   font-family: Arial, Helvetica, sans-serif;
-  
-	
 }
 
 .topnav {
@@ -13,7 +11,7 @@ body {
 .topnav a {
   float: left;
   display: block;
-  color: #95a7b7;
+  color: #f2f2f2;
   text-align: center;
   padding: 14px 16px;
   text-decoration: none;
@@ -26,17 +24,12 @@ body {
 }
 
 .topnav a.active {
-  background-color: #282a36;
-  color: #95a7b7;
+  background-color: #4CAF50;
+  color: white;
 }
 
 .topnav .icon {
   display: none;
-}
-
-.topnav a.logging{
-
-	float: right;
 }
 
 @media screen and (max-width: 600px) {
@@ -61,16 +54,9 @@ body {
   }
 }
 
-.mynotes{
-
-	width: 500px;
-	height:500px;
-	position:relative;
-	float: right;
-
 footer{
 
-	 position: fixed;
+         position: fixed;
   left: 0;
   bottom: 0;
   width: 100%;
@@ -78,4 +64,5 @@ footer{
   color: #95a7b7;
   text-align: center;
 }
+
 

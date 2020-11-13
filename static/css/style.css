@@ -8,13 +8,16 @@ body {
 .topnav {
   overflow: hidden;
   background-color: #455265;
+	padding: 5px;
+	height: 5510px:
+	display:block;
 }
 
 .topnav a {
   float: left;
-  display: block;
+  background-color: #282a36;
   color: #95a7b7;
-  text-align: center;
+text-align: center;
   padding: 14px 16px;
   text-decoration: none;
   font-size: 17px;
@@ -26,9 +29,10 @@ body {
 }
 
 .topnav a.active {
-  background-color: #282a36;
-  color: #95a7b7;
+  background-color: #4CAF50;
+  color: white;
 }
+
 
 .topnav .icon {
   display: none;
@@ -36,7 +40,7 @@ body {
 
 .topnav a.logging{
 
-	float: right;
+        float: right;
 }
 
 @media screen and (max-width: 600px) {
@@ -63,11 +67,11 @@ body {
 
 .mynotes{
 
-	width: 500px;
-	height:500px;
-	position:relative;
-	float: right;
-
+        width: 500px;
+        height:500px;
+        position:relative;
+        float: right;
+}
 footer{
 
 	 position: fixed;

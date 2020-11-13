@@ -1,8 +1,10 @@
 from flask import Flask, render_template, redirect, url_for, request, session, flash
 from flask_bootstrap import Bootstrap
+from flask_datepicker import datepicker
 
 app = Flask(__name__)
 Bootstrap(app)
+datepicker(app)
 app.secret_key = 'Aksdf304.asd;sajad;2sadadsa;lvna;l~~23cx:s1a>Mdb'
 
 @app.route('/')
