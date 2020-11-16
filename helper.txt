@@ -1,0 +1,7 @@
+export FLASK_APP=thistleapp.py
+export FLASK_ENV=development
+
+#app settings
+export APP_SETTINGS="config.DevelopmentConfig"
+#export database
+export DATABASE_URL="postgresql://localhost/thistlenote"

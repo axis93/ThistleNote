@@ -1,6 +1,7 @@
 from flask import Flask, render_template, redirect, url_for, request, session, flash
 from flask_bootstrap import Bootstrap
 from flask_datepicker import datepicker
+import os
 
 app = Flask(__name__)
 Bootstrap(app)
@@ -51,6 +52,8 @@ def signup():
         password = request.form.get("password")
         if not email or not password:
             return "You have missed something, please try again"
+        new_dir = os.path.join(app.config['ACCOUNT_FOLDERS'], username)
+        os.mkdir(new_dir)
         return render_template('login.html')
     return render_template('signup.html')
 @app.route('/upload/', methods=['POST','GET'])
