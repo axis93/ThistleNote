@@ -1,12 +1,21 @@
 from flask import Flask, render_template, redirect, url_for, request, session, flash
 from flask_bootstrap import Bootstrap
 from flask_datepicker import datepicker
+from flask_sqlalchemy import SQLAlchemy
 import os
+
 
 app = Flask(__name__)
 Bootstrap(app)
 datepicker(app)
 app.secret_key = 'Aksdf304.asd;sajad;2sadadsa;lvna;l~~23cx:s1a>Mdb'
+# next lines have been added for postgresql
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite://app.db'
+
+db = SQLAlchemy(app)
+
+from models import User
+
 
 @app.route('/')
 def home():
