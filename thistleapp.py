@@ -1,21 +1,42 @@
-from flask import Flask, render_template, redirect, url_for, request, session, flash
+from flask import Flask, render_template, redirect, url_for, request, session, flash, g
 from flask_bootstrap import Bootstrap
 from flask_datepicker import datepicker
-from flask_sqlalchemy import SQLAlchemy
+import sqlite3
 import os
 
 
 app = Flask(__name__)
+
 Bootstrap(app)
 datepicker(app)
 app.secret_key = 'Aksdf304.asd;sajad;2sadadsa;lvna;l~~23cx:s1a>Mdb'
 # next lines have been added for postgresql
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite://app.db'
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://localhost/thistleapp'
+#app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+db_location = 'var/test.db'
+app.config['ACCOUNT_FOLDERS']='static/users/'
 
-db = SQLAlchemy(app)
 
-from models import User
+def get_db():
+    db = getattr(g, 'db', None)
+    if db is None:
+        db = sqlite3.connect(db_location)
+        g.db = db
+    return db
 
+
+@app.teardown_appcontext
+def close_db_connection(exception):
+    db = getattr(g, 'db', None)
+    if db is not None:
+        db.close()
+
+def init_db():
+    with app.app_context():
+        db = get_db()
+        with app.open_resource('schema.sql', mode='r') as f:
+            db.cursor().executescript(f.read())
+        db.commit()
 
 @app.route('/')
 def home():
@@ -37,8 +58,8 @@ def about():
 def note():
     return render_template('notes.html')
 
-@app.route('/spukaxis/dashboard/')
-def dashboard():
+@app.route('/<username>/dashboard/')
+def dashboard(username):
     return render_template('dashboard.html')
 
 @app.route('/login', methods=['GET',   'POST'])
@@ -46,7 +67,7 @@ def login():
     if request.method == 'POST':
         if request.form['Password'] == 'porcodio' and request.form['username'] == 'spukaxis':
             
-            return redirect(url_for('dashboard'))
+            return redirect(url_for('dashboard', username=request.form['username']))
         else:
             flash('Wrong credentials inserted. Please try again')
             return render_template('login.html')
@@ -55,6 +76,7 @@ def login():
 
 @app.route('/signup', methods=['GET','POST'])
 def signup():
+    db = get_db()
     if request.method == 'POST':
         username = request.form.get("username")
         email = request.form.get("email")
@@ -63,13 +85,15 @@ def signup():
             return "You have missed something, please try again"
         new_dir = os.path.join(app.config['ACCOUNT_FOLDERS'], username)
         os.mkdir(new_dir)
-        return render_template('login.html')
+        db.cursor().execute('insert into User values (username, email, password)')
+        db.commit()
+        return username
     return render_template('signup.html')
 @app.route('/upload/', methods=['POST','GET'])
 def upload():
     if request.method == 'POST':
         f = request.files['datafile']
-        f.save('static/uploads/filename')
+        f.save('static/uploads/datafile')
         return "File Uploaded"
     else:
         page='''

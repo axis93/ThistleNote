@@ -4,4 +4,7 @@ export FLASK_ENV=development
 #app settings
 export APP_SETTINGS="config.DevelopmentConfig"
 #export database
-export DATABASE_URL="postgresql://localhost/thistlenote"
+export DATABASE_URL="postgresql://localhost/thistlenote
+
+
+<link href="{{ url_for('static', filename='css/core.css') }}?{{ range(1,10000) | random }}" rel ="stylesheet" />"

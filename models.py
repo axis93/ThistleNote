@@ -2,6 +2,8 @@ from thistleapp import db
 
 class User(db.Model):
     __tablename__ = 'users'
+    
+
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     username = db.Column(db.String())
@@ -34,7 +36,7 @@ class Note(db.Model):
     note_body = db.Column(db.String())
     created = db.Column(db.DateTime) 
     updated = db.Column(db.DateTime)
-    user_id = Column(Integer, ForeignKey('user.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
     def __init__(self, title_name, note_body, created, updated, user_id):
         self.title_name
