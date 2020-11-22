@@ -1,6 +1,7 @@
-from flask import Flask, render_template, redirect, url_for, request, session, flash, g
+from flask import Flask, render_template, redirect, url_for, request, session, flash, g, send_from_directory
 from flask_bootstrap import Bootstrap
 from flask_datepicker import datepicker
+from werkzeug import secure_filename
 import sqlite3
 import os
 
@@ -13,9 +14,10 @@ app.secret_key = 'Aksdf304.asd;sajad;2sadadsa;lvna;l~~23cx:s1a>Mdb'
 # next lines have been added for postgresql
 #app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://localhost/thistleapp'
 #app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-db_location = 'var/test.db'
+db_location = 'var/mydatabase.db'
+ALLOWED_EXTENSION = {'txt', 'pdf', 'pptx'}
 app.config['ACCOUNT_FOLDERS']='static/users/'
-
+app.config['UPLOAD_FOLDER'] = 'static/uploads/'
 
 def get_db():
     db = getattr(g, 'db', None)
@@ -40,6 +42,7 @@ def init_db():
 
 @app.route('/')
 def home():
+
     return render_template('home.html',)
 
 @app.route('/contactus/')
@@ -67,6 +70,7 @@ def login():
     if request.method == 'POST':
         if request.form['Password'] == 'porcodio' and request.form['username'] == 'spukaxis':
             
+            
             return redirect(url_for('dashboard', username=request.form['username']))
         else:
             flash('Wrong credentials inserted. Please try again')
@@ -76,8 +80,9 @@ def login():
 
 @app.route('/signup', methods=['GET','POST'])
 def signup():
-    db = get_db()
     if request.method == 'POST':
+        db = get_db()
+
         username = request.form.get("username")
         email = request.form.get("email")
         password = request.form.get("password")
@@ -85,16 +90,25 @@ def signup():
             return "You have missed something, please try again"
         new_dir = os.path.join(app.config['ACCOUNT_FOLDERS'], username)
         os.mkdir(new_dir)
-        db.cursor().execute('insert into User values (username, email, password)')
+        db.cursor().execute('insert into users (user_name, user_email, user_password) VALUES (?,?,?)', (username, email, password) )
         db.commit()
-        return username
+        msg = "You have created the user: " + username
+        return render_template('login.html', msg = msg)
+        
     return render_template('signup.html')
+
+
+def allowed_file(filename):
+    return '.' in filename and \
+            filename.rsplit('.',1)[1].lower() in ALLOWED_EXTENSION
+
 @app.route('/upload/', methods=['POST','GET'])
 def upload():
     if request.method == 'POST':
-        f = request.files['datafile']
-        f.save('static/uploads/datafile')
-        return "File Uploaded"
+        f = request.files['datafile']    
+        f.save(os.path.join(app.config['UPLOAD_FOLDER'], f.filename))
+        flash('You have successfully uploaded a file')
+        return uploaded_file(f)
     else:
         page='''
         <html>
@@ -107,6 +121,12 @@ def upload():
         </html>
         '''
         return page, 200
+
+
+@app.route('/uploads/<filename>')
+def uploaded_file(filename):
+    f = request.files['datafile']
+    return send_from_directory('static/uploads/', filename)
 
 
 if __name__ == "__main__":

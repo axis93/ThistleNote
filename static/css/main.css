@@ -6,6 +6,7 @@ body {
 .topnav {
   overflow: hidden;
   background-color: #455265;
+	color: #95a7b7;
 }
 
 .topnav a {
@@ -24,7 +25,7 @@ body {
 }
 
 .topnav a.active {
-  background-color: #4CAF50;
+  background-color: #282a36;
   color: white;
 }
 
@@ -53,7 +54,38 @@ body {
     text-align: left;
   }
 }
+.dropdown{
+	position:relative;
+	display:inline-block;
+}
 
+.dropD-content{
+	display:none;
+	position:absolute;
+	overflow:auto;
+	z-index:1;
+	 min-width: 230px;
+}
+
+.dropD-content a {
+
+
+	display:block;
+}
+
+.dropbtn {
+  background-color: #4CAF50;
+  color: white;
+  padding: 12px;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+}
+
+.txt-bar{
+
+	background-color: #455265;
+}
 footer{
 
          position: fixed;
@@ -62,7 +94,7 @@ footer{
   width: 100%;
   background-color: #455265;
   color: #95a7b7;
-  text-align: center;
+  text-align:  center;
 }
 
 

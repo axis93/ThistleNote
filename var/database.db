@@ -1,0 +1,8 @@
+import sqlite3
+
+conn = sqlite3.connect('database.db')
+print "Opened database successfully";
+
+conn.execute('CREATE TABLE users( user_name VARCHAR(255), user_emailaddress TEXT, user_password VARCHAR(200))')
+print "Table created successfully";
+conn.close()

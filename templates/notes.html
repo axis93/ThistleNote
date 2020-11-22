@@ -2,7 +2,9 @@
 	<head>
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 		<script type=text/javascript> </script>
-			</head>
+		<link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+
+	</head>
 	{% block content %}
 
 <script src="/static/js/main.js"></script>
@@ -11,7 +13,13 @@
 		<button class="fontStyle" onclick="document.execCommand('italic',false,null);" title="ItalicizeHighlighted Text"> <i> I </i> </button>
 		<button class="fontStyle" onclick="document.execCommand( 'underline',false,null);"><u>U</u> </button>
 		<button class="fontStyle" onclick="document.execCommand( 'backColor', false, 'yellow');"> <b>H</b> </button>
-
+		<div class="dropdown">
+			<button onclick="dropDown()" class="dropbtn">Fonts</button>
+			<div id="fontDropdown" class="dropD-content">
+				<a id="Georgia">Georgia</a>
+				<a id="Palatino">Palatno Linotype</a>
+			</div>
+		</div>
 	</fieldset>
 
          <div id="editor1" contenteditable="true" style="width: 75%; height: 100%; float: right;text-align:left; border-style:solid;padding:2px;">
@@ -36,6 +44,10 @@ $("#splitter").kendoSplitter({
     ],
     orientation: "vertical"
 });
+
+function dropDown() {
+  document.getElementById("fontDropdown").classList.toggle("show");
+}
 	</script>
 	{% endblock content %}
 </html>
