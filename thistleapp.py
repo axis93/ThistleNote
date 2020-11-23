@@ -4,7 +4,8 @@ from flask_datepicker import datepicker
 from werkzeug import secure_filename
 import sqlite3
 import os
-
+from forms import ContactForm
+from flask_mail import Message, Mail
 
 app = Flask(__name__)
 
@@ -18,6 +19,15 @@ db_location = 'var/mydatabase.db'
 ALLOWED_EXTENSION = {'txt', 'pdf', 'pptx'}
 app.config['ACCOUNT_FOLDERS']='static/users/'
 app.config['UPLOAD_FOLDER'] = 'static/uploads/'
+# configuration for the email server
+app.config['MAIL_SERVER'] = "smtp.gmail.com"
+app.config['MAIL_PORT'] = 465
+app.config['MAIL_USE_SSL'] = True
+app.config['MAIL_USERNAME'] = 'sim.pia.work@gmail.com'
+app.config['MAIL_PASSWORD'] = 'thisismynewpasswordthatistemporary'
+
+mail.init_app(thistleapp)
+
 
 def get_db():
     db = getattr(g, 'db', None)
@@ -45,9 +55,26 @@ def home():
 
     return render_template('home.html',)
 
-@app.route('/contactus/')
+@app.route('/contactus', methods=['GET', 'POST'])
 def contact():
-    return render_template('contactus.html')
+    form = ContactForm()
+
+    if request.method == 'POST':
+        if form.validate() == False:
+            flash('All fields are required. Please fill in the form.')
+            return render_template('contactus.html', form=form)
+        else:
+            msg = Message(form.subject.data, sender='sim.pia.work@gmail.com', recipients=['simone.piazzini@gmail.com'])
+            msn.body= """
+            From: %s &lt;%s&gt;
+            %s
+            """ % (form.name.data, form.email.data, form.message.data)
+            mail.send(msg)
+
+            return render_template('contactus.html', success=True)
+        
+    elif request.method == 'GET':
+        return render_template('contactus.html', form = form)
 
 @app.route('/help/')
 def help():
