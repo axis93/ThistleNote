@@ -2,6 +2,7 @@ from flask import Flask, render_template, redirect, url_for, request, session, f
 from flask_bootstrap import Bootstrap
 from flask_datepicker import datepicker
 from werkzeug import secure_filename
+from datetime import datetime
 import sqlite3
 import os
 from forms import ContactForm
@@ -26,8 +27,7 @@ app.config['MAIL_USE_SSL'] = True
 app.config['MAIL_USERNAME'] = 'sim.pia.work@gmail.com'
 app.config['MAIL_PASSWORD'] = 'thisismynewpasswordthatistemporary'
 
-mail.init_app(thistleapp)
-
+mail = Mail(app)
 
 def get_db():
     db = getattr(g, 'db', None)
@@ -84,26 +84,67 @@ def help():
 def about():
     return render_template('about.html')
 
-@app.route('/note')
-def note():
+@app.route('/<username>/note/<string:title>', methods=['GET', 'PUT', 'DELETE'])
+def note(username, title):
+        # I would like to store the file permanently on the server too
+    db = get_db()
+    note = None
+    if request.method == 'GET':
+
+        #db.cursor().execute('SELECT * from notes WHERE title_name=?', [title])
+
     return render_template('notes.html')
+
+@app.route('/save')
+def save():
+    return "saved"
 
 @app.route('/<username>/dashboard/')
 def dashboard(username):
-    return render_template('dashboard.html')
+    db = get_db()
+    if request.method == 'POST':
+        new_title_name = request.form["title"]
+        created = datetime.now()
+        updated = datetime.now()
+        user_id = 1
+
+        db.cursor().execute('insert into notes (title_name, created, updated, user_id) VALUES (?,?,?,?)', (new_title_name, created, updated))
+        db.commit()
+        # I would like to store the file permanently on the server too
+        return redirect(url_for('notes.html', username))
+
+    if request.method == 'GET':
+        allnotes = db.cursor().execute('SELECT * FROM notes').fetchall()
+        db.close()
+    return render_template('dashboard.html', notes=allnotes)
 
 @app.route('/login', methods=['GET',   'POST'])
 def login():
     if request.method == 'POST':
-        if request.form['Password'] == 'porcodio' and request.form['username'] == 'spukaxis':
-            
-            
-            return redirect(url_for('dashboard', username=request.form['username']))
+        db = get_db()
+        username = request.form.get("username")
+        email = request.form.get("email")
+        
+        user = db.cursor().execute('select * from users where user_name = ?', [username])
+        if user is None:
+            msg = "No user found, please try again"
         else:
-            flash('Wrong credentials inserted. Please try again')
-            return render_template('login.html')
+            session['username'] = request.form['username']
+            
+        return redirect(url_for('dashboard', username=request.form['username']))
+       # else:
+        #    flash('Wrong credentials inserted. Please try again')
+         #   return render_template('login.html')
+    else:
+        if session != None:
+            msg = "We are sorry but you are logged in already, I am afraid you will not be able to login until you first logout"
 
     return render_template('login.html')
+
+@app.route('/logout')
+def logout():
+    session.pop('username', None)
+    return render_template('home.html')
 
 @app.route('/signup', methods=['GET','POST'])
 def signup():
