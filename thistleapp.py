@@ -52,8 +52,11 @@ def init_db():
 
 @app.route('/')
 def home():
-
-    return render_template('home.html',)
+    db = get_db() 
+    notes = db.cursor().execute('SELECT * FROM notes').fetchall()
+    db.close()
+    
+    return render_template('home.html', allnotes = notes)
 
 @app.route('/contactus', methods=['GET', 'POST'])
 def contact():
@@ -82,41 +85,66 @@ def help():
 
 @app.route('/about')
 def about():
+   # db = get_db()
+   # db.cursor().execute('insert into notes (title_name,  
     return render_template('about.html')
 
-@app.route('/<username>/note/<string:title>', methods=['GET', 'PUT', 'DELETE'])
-def note(username, title):
-        # I would like to store the file permanently on the server too
+@app.route('/note/', methods=['POST','GET', 'PUT', 'DELETE'])
+def note():
     db = get_db()
-    note = None
-    if request.method == 'GET':
+    if request.method == 'POST':
+        new_title_name = request.form.get("title")
+        created = datetime.now()
+        updated = datetime.now()
+        note_body = request.form.get("body")
+    
+        db.cursor().execute('insert into notes (title_name, note_body) VALUES (?,?)', (new_title_name, note_body))
+        db.commit()
+        return redirect(url_for('dashboard', username=session['username']))
+    # I would like to store the file permanently on the server too
+   # db = get_db()
+   # note = None
+   # if request.method == 'GET':
 
-        #db.cursor().execute('SELECT * from notes WHERE title_name=?', [title])
+    #    db.cursor().execute('SELECT * from notes WHERE title_name=?', ['title'])
+     #   rows = db.cursor().fetchall()
+      #  for r in rows:
+       #     note = r
+       # if note is not None:
+        #    return "well done"
+       # else:
+        #    return "Something went wrong", 404
+   # if request.method == 'POST':
+    #    return "you did it!"
+
+   # if request.method == 'PUT':
+    #    title_name = request.form["title"]
+     #   updated = datetime.now()
+        # INCOMPLETE/INCORRECT SQL STATEMENT
+      #  db.cursor().execute('UPDATE note SET title_name=?, update=? WHERE id=?', [id])        
+       # db.commit()
+        #return "The note has been updated", 200
+
+ #   if request.method == 'DELETE':
+  #      db.cursor().execute('DELETE from notes where id=?', [id])
+   #     db.commit()
+
 
     return render_template('notes.html')
 
-@app.route('/save')
-def save():
-    return "saved"
 
-@app.route('/<username>/dashboard/')
+@app.route('/<username>/dashboard/', methods=['GET', 'POST'])
 def dashboard(username):
     db = get_db()
-    if request.method == 'POST':
-        new_title_name = request.form["title"]
-        created = datetime.now()
-        updated = datetime.now()
-        user_id = 1
-
-        db.cursor().execute('insert into notes (title_name, created, updated, user_id) VALUES (?,?,?,?)', (new_title_name, created, updated))
-        db.commit()
+       
+      # db.commit()
+        
         # I would like to store the file permanently on the server too
-        return redirect(url_for('notes.html', username))
-
     if request.method == 'GET':
-        allnotes = db.cursor().execute('SELECT * FROM notes').fetchall()
-        db.close()
-    return render_template('dashboard.html', notes=allnotes)
+        notes = db.cursor().execute('SELECT * FROM notes').fetchall()
+        
+        return render_template('dashboard.html', allnotes=notes)
+   # return render_template('dashboard.html', allnotes=allnotes)
 
 @app.route('/login', methods=['GET',   'POST'])
 def login():

@@ -11,5 +11,13 @@
 
 <p> Hey, we understand that you might thinking "Hold on a second what is it all about? You are going too fast for me!". That is why we decided to give you an insight about what we do and we are. Please do not hesitate to click on "About" or "Help" on the top bar to know more </p>
 
+
+ {% for note in allnotes %}
+                <p>{{ note['title_name'] }}</p>
+                <h3>{{ note['note_body'] }}</h3>
+                <p> this is to show that this loop works </p
+        {% endfor %}
+
+
 {% endblock %}
 </html>

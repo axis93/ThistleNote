@@ -7,12 +7,18 @@
 	<h1> Welcome Spukaxis !! This is your dashboard! </h1>
 	<h2> If you want to upload a new file click here </h2> <a class="button" href="{{ url_for('upload') }}"><button>Upload</button></a>
 	<h2> If you want to read your notes click here </h2> <button>Read</button>
-
+	<a> somthing to test</a>
+	<table>
 	{% for note in allnotes %}
-		<h3>{{ note['title_name'] }} </h3>
-
+	<tr>
+		<td>{{note }}</td>
+		<td>{{ note['note_body'] }} </td>
+	</tr>
+	<p> this is to show that this loop works </p>
 	{% endfor %}
-	<h2> If you want to create a new note click here</h2> <a class="button" href="{{ url_for('note') }}" ><button>New </button> </a>
+	</table>
+	<h2> If you want to create a new note click here</h2> <a class="button" href="{{ url_for('note') }}" method="POST" ><button>New </button> </a>
+	<input type="text" name="title" value="{{ request.form.title }}" > </input>
 	<br>
 	{% endblock content %}
 

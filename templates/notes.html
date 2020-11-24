@@ -6,7 +6,6 @@
 
 	</head>
 	{% block content %}
-
 <script src="/static/js/main.js"></script>
 	<fieldset class="txt-bar"> 
 		<button class="fontStyle" onclick="document.execCommand( 'bold',false,null);" title="Bold Highlighted Text"><b>B</b> </button>
@@ -14,24 +13,29 @@
 		<button class="fontStyle" onclick="document.execCommand( 'underline',false,null);"><u>U</u> </button>
 		<button class="fontStyle" onclick="document.execCommand( 'backColor', false, 'yellow');"> <b>H</b> </button>
 		<div class="dropdown">
-			<button onclick="dropDown()" class="dropbtn">Fonts</button>
+			<button OnClick="dropDown()" class="dropbtn">Fonts</button>
 			<div id="fontDropdown" class="dropD-content">
 				<a id="Georgia">Georgia</a>
 				<a id="Palatino">Palatno Linotype</a>
 			</div>
 		</div>
-		<button class="save" {{ url_for('save') }}> Save </button>
 	</fieldset>
+<form class-"save" action="/note/" method="POST">
 
-         <div id="editor1" contenteditable="true" style="width: 75%; height: 100%; float: right;text-align:left; border-style:solid;padding:2px;">
-                 The quick brown fox jumped over the lazy dog.
-         </div>
+	<div id="editor1" contenteditable="true" style="width: 75%; height: 100%; float: right;text-align:left; border-style:solid;padding:2px;" >
+                 The quick brown fox juimped over the lazy dog.
+		 <textarea name="body" value="{{ request.form.body }}"></textarea> 
+	</div>
 
 	<div id="splitter">
     <div>Area 1</div>
     <div>Area 2</div>
 	<button> Make new folder </button>
 </div>
+	<label>Title</label>
+	<input type="text" name="title" value="{{ request.form.title }}"> 
+<button type="submit" class="save" action="/note/" method="POST" > Save </button>
+	</form>
 	<script>
 
 $(document).ready(function() {
