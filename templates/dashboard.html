@@ -11,8 +11,9 @@
 	<table>
 	{% for note in allnotes %}
 	<tr>
-		<td>{{note }}</td>
+		<td>{{ note['title_name'] }}</td> <button action="/note/" method="DELETE">Delete</button>
 		<td>{{ note['note_body'] }} </td>
+		<td> <button action="/note" method="DELETE">Delete</button></td>
 	</tr>
 	<p> this is to show that this loop works </p>
 	{% endfor %}

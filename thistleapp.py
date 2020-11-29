@@ -56,7 +56,7 @@ def home():
     notes = db.cursor().execute('SELECT * FROM notes').fetchall()
     db.close()
     
-    return render_template('home.html', allnotes = notes)
+    return render_template('home.html', allnotes = notes, isHome=True)
 
 @app.route('/contactus', methods=['GET', 'POST'])
 def contact():
@@ -125,11 +125,10 @@ def note():
        # db.commit()
         #return "The note has been updated", 200
 
- #   if request.method == 'DELETE':
-  #      db.cursor().execute('DELETE from notes where id=?', [id])
-   #     db.commit()
-
-
+    if request.method == 'DELETE':
+        db.cursor().execute('DELETE from notes where id=?', [id])
+        db.commit()
+        return redirect(url_for('dashboard.html', username=sesssion['username']))
     return render_template('notes.html')
 
 
@@ -172,6 +171,7 @@ def login():
 @app.route('/logout')
 def logout():
     session.pop('username', None)
+    session['username'] = None 
     return render_template('home.html')
 
 @app.route('/signup', methods=['GET','POST'])

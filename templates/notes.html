@@ -3,17 +3,17 @@
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 		<script type=text/javascript> </script>
 		<link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
-
+		<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
 	</head>
 	{% block content %}
-<script src="/static/js/main.js"></script>
+	<body>
 	<fieldset class="txt-bar"> 
 		<button class="fontStyle" onclick="document.execCommand( 'bold',false,null);" title="Bold Highlighted Text"><b>B</b> </button>
 		<button class="fontStyle" onclick="document.execCommand('italic',false,null);" title="ItalicizeHighlighted Text"> <i> I </i> </button>
 		<button class="fontStyle" onclick="document.execCommand( 'underline',false,null);"><u>U</u> </button>
 		<button class="fontStyle" onclick="document.execCommand( 'backColor', false, 'yellow');"> <b>H</b> </button>
 		<div class="dropdown">
-			<button OnClick="dropDown()" class="dropbtn">Fonts</button>
+			<button onclick="dropDown()" class="dropbtn">Fonts</button>
 			<div id="fontDropdown" class="dropD-content">
 				<a id="Georgia">Georgia</a>
 				<a id="Palatino">Palatno Linotype</a>
@@ -22,9 +22,8 @@
 	</fieldset>
 <form class-"save" action="/note/" method="POST">
 
-	<div id="editor1" contenteditable="true" style="width: 75%; height: 100%; float: right;text-align:left; border-style:solid;padding:2px;" >
-                 The quick brown fox juimped over the lazy dog.
-		 <textarea name="body" value="{{ request.form.body }}"></textarea> 
+	<div id="editor1" placeholder="Please insert here your text" contenteditable="true" style="width: 75%; height: 100%; float: right;text-align:left; border-style:solid;padding:2px;" >
+		 <textarea name="body" placeholder="Please insert value here"  contenteditable="true"value="{{ request.form.body }}"></textarea> 
 	</div>
 
 	<div id="splitter">
@@ -36,24 +35,9 @@
 	<input type="text" name="title" value="{{ request.form.title }}"> 
 <button type="submit" class="save" action="/note/" method="POST" > Save </button>
 	</form>
-	<script>
 
-$(document).ready(function() {
-    $("#splitter").kendoSplitter();
-});
-
-
-$("#splitter").kendoSplitter({
-    panes: [
-        { collapsible: true, min: "100px", max: "300px" },
-        { collapsible: true }
-    ],
-    orientation: "vertical"
-});
-
-function dropDown() {
-  document.getElementById("fontDropdown").classList.toggle("show");
-}
-	</script>
 	{% endblock content %}
+	</body>
+	 <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+
 </html>
