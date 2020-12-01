@@ -12,7 +12,9 @@ CREATE TABLE users(
 CREATE TABLE notes(
 
 	title_name VARCHAR(255),
-	note_body TEXT
+	note_body TEXT,
+	user_id, INTEGER,
+	FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
 

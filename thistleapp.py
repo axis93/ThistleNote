@@ -5,11 +5,14 @@ from werkzeug import secure_filename
 from datetime import datetime
 import sqlite3
 import os
-from forms import ContactForm
+from forms import ContactForm, PageDown
 from flask_mail import Message, Mail
+from flask_pagedown import PageDown
 
 app = Flask(__name__)
 
+
+pagedown = PageDown(app)
 Bootstrap(app)
 datepicker(app)
 app.secret_key = 'Aksdf304.asd;sajad;2sadadsa;lvna;l~~23cx:s1a>Mdb'
@@ -58,6 +61,18 @@ def home():
     
     return render_template('home.html', allnotes = notes, isHome=True)
 
+
+@app.route('/markdown', methods = ['GET', 'POST'])
+def markdown():
+    form = PageDown()
+    if request.method == 'POST' and form.validate():
+        text = form.pageDown.data
+        title = form.title_note.data
+        return 'Saved md'
+       # do something interesting with the Markdown text
+    return render_template('markdown.html', form = form)
+
+
 @app.route('/contactus', methods=['GET', 'POST'])
 def contact():
     form = ContactForm()
@@ -67,7 +82,7 @@ def contact():
             flash('All fields are required. Please fill in the form.')
             return render_template('contactus.html', form=form)
         else:
-            msg = Message(form.subject.data, sender='sim.pia.work@gmail.com', recipients=['simone.piazzini@gmail.com'])
+            msg = Message(form.subject.data, sender=form.email.data, recipients=['simone.piazzini@gmail.com'])
             msn.body= """
             From: %s &lt;%s&gt;
             %s
@@ -97,8 +112,9 @@ def note():
         created = datetime.now()
         updated = datetime.now()
         note_body = request.form.get("body")
-    
-        db.cursor().execute('insert into notes (title_name, note_body) VALUES (?,?)', (new_title_name, note_body))
+        user_id = session['id']
+        db.cursor().execute('insert into notes (title_name, note_body, user_id) VALUES (?,?, ?)', (new_title_name, note_body, user_id))
+
         db.commit()
         return redirect(url_for('dashboard', username=session['username']))
     # I would like to store the file permanently on the server too
@@ -203,8 +219,9 @@ def upload():
     if request.method == 'POST':
         f = request.files['datafile']    
         f.save(os.path.join(app.config['UPLOAD_FOLDER'], f.filename))
+        f = f.filename
         flash('You have successfully uploaded a file')
-        return uploaded_file(f)
+        return send_from_directory('static/uploads/', f )
     else:
         page='''
         <html>
@@ -219,13 +236,10 @@ def upload():
         return page, 200
 
 
-@app.route('/uploads/<filename>')
+@app.route('/uploads/file')
 def uploaded_file(filename):
-    f = request.files['datafile']
-    return send_from_directory('static/uploads/', filename)
-
+    return send_from_directory('static/uploads/',filename )
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', debug=True)
-
 
