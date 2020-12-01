@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+
+        <form action="{{ url_for('note') }}" method=post>
+            {{ form.note_title.label }}
+            {{ form.note_title }}
+
+            {{ form.note.label }}
+            {{ form.note }}
+
+          
+            {{ form.submit }}
+        </form>
+            <form  action="/note/" method="POST">
+                <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                   
+                    <h3>{{ form.note_title.label }}</h3>
+                    <br>
+                    {{ form.note_title }}
+                    <br>
+                   
+                </div>
+                <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
+                    <div class="inline-headers">
+                        <h3> {{ form.note.label }} </h3>
+                        <h5>
+                            (Also supports Markdown. For markdown reference visit: <a href="https://en.support.wordpress.com/markdown-quick-reference/">here</a>)
+                        </h5>
+                    </div>
+                    <br>
+                    <!-- {{ form.note(class='form-control no_borders', cols="35", rows="20") }} -->
+                    {{ form.note}}
+                    <br>
+                    {{ form.submit(class='form-control no_borders btn btn-primary') }}
+                </div>
+            </form>
+        </div>
+   
+{% endblock %}

@@ -62,15 +62,17 @@ def home():
     return render_template('home.html', allnotes = notes, isHome=True)
 
 
+
 @app.route('/markdown', methods = ['GET', 'POST'])
 def markdown():
-    form = PageDown()
-    if request.method == 'POST' and form.validate():
-        text = form.pageDown.data
-        title = form.title_note.data
-        return 'Saved md'
+    form = PageDownFormExample()
+    text = None
+    if form.validate():
+       text = form.pageDown.data
+    else:
+        form.pageDown.data = ('Please enter here your note\n')
        # do something interesting with the Markdown text
-    return render_template('markdown.html', form = form)
+    return render_template('markdown.html', form = form, text = text)
 
 
 @app.route('/contactus', methods=['GET', 'POST'])

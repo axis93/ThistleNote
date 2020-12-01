@@ -1,17 +1,50 @@
+<!DOCTYPE html>
 <html>
-	<head>
-		{{ pagedown.include_pagedown() }}
-	<script type="text/javascript" src="https://mycdn/path/to/converter.min.js"></script>
-    <script type="text/javascript" src="https://mycdn/path/to/sanitizer.min.js"></script>
-	</head>
-	{% block content %}
-	<form action="{{ url_for('markdown') }}"  method="POST">
-		{{ form.pagedown }}
-		{{ form.title_note.label }}
-		{{ form.title_note }}
-		<p> paar </p>
-		{{ form.submit }}
-	</form>
-	{% endblock %}
-</html
+<head>
 
+        {{ pagedown.include_pagedown() }}
+
+</head>
+<body>
+    {% if text %}
+    <div>
+        <p>
+            Preview
+        </p>
+        <pre>
+            {{ text }}
+        </pre>
+    </div>
+    {% endif %}
+	{% block markdown %}
+	<form action="/markdown"method="POST">
+		{{ form.csrf_token }}
+        <div>
+        <b>{{ form.pageDown.label }}</b>
+        {{ form.pageDown(rows = 10) }}
+       <br>
+        </div>
+        <div>
+            {{ form.pageDown.label }}
+            {{ form.pageDown(only_preview=True) }}
+            
+        </div>
+        <button type="button">BOLD</button>
+         {{ form.submit }}
+    </form>
+    
+    <div></div>
+<script>
+$(document.body).on('click', 'button', function() {
+
+    var val=$('textarea').val();
+    var bolded=val.replace(/\*\*[A-z0-9]+\*\*/gi, '<span style="font-weight: bold; color: blue;">' + val + '</span>');
+    bolded = bolded.replace(/\*\*/gi, "");
+    
+    $('div').html(bolded);
+});
+</script>
+{% endblock %}
+</body>
+
+</html>
