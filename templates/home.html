@@ -13,9 +13,9 @@
 
 
  {% for note in allnotes %}
-                <p>{{ note['title_name'] }}</p>
-                <h3>{{ note['note_body'] }}</h3>
-                <p> this is to show that this loop works </p
+                <p>{{ note[0]}}</p>
+                <h3>{{ note[1] }}</h3>
+                <p> this is to show that this loop works </p>
         {% endfor %}
 
 

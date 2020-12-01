@@ -11,9 +11,12 @@
 		<a href="{{ url_for('help') }}">Help</a>
 		<a href="{{ url_for('contact') }}">Contact</a>
 		<a href="{{ url_for('about') }}">About</a>
+		{% if session['username'] == None: %}
 			<a class="logging" href="{{ url_for('login') }}">Login</a>
 			<a class="logging" href="{{ url_for('signup') }}">Signup</a>
-		<a action="/logout" href="{{ url_for('home') }}">Logout</a>
+		{% else: %}
+		<a  href="/logout" }}">Logout</a>
+		{% endif %}
 		</div>
 	{% block content  %} 
 	{% endblock  %}

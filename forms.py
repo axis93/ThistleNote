@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import Form, StringField, TextAreaField, SubmitField, validators, ValidationError, TextField, SubmitField
+from wtforms import Form, StringField, TextAreaField, SubmitField, validators, ValidationError, TextField
 from flask_pagedown.fields import PageDownField
 
 
@@ -19,7 +19,7 @@ class NoteForm(FlaskForm):
     note_body = TextAreaField('Your Note:')
     submit = SubmitField('Add Note')
 
-class PageDownFormExample(Form):
+class PageDown(Form):
     pageDown = PageDownField('Enter your markdown')
     submit = SubmitField('Submit')
 

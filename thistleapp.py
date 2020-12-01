@@ -1,13 +1,16 @@
 from flask import Flask, render_template, redirect, url_for, request, session, flash, g, send_from_directory
 from flask_bootstrap import Bootstrap
 from flask_datepicker import datepicker
-from werkzeug import secure_filename
+#from werkzeug import secure_filename
 from datetime import datetime
 import sqlite3
 import os
 from forms import ContactForm, PageDown
 from flask_mail import Message, Mail
+
 from flask_pagedown import PageDown
+from flask_pagedown.fields import PageDownField
+
 
 app = Flask(__name__)
 
@@ -29,6 +32,7 @@ app.config['MAIL_PORT'] = 465
 app.config['MAIL_USE_SSL'] = True
 app.config['MAIL_USERNAME'] = 'sim.pia.work@gmail.com'
 app.config['MAIL_PASSWORD'] = 'thisismynewpasswordthatistemporary'
+SESSION_TYPE = None
 
 mail = Mail(app)
 
@@ -52,6 +56,9 @@ def init_db():
         with app.open_resource('schema.sql', mode='r') as f:
             db.cursor().executescript(f.read())
         db.commit()
+@app.route('/some')
+def some():
+    return render_template('some.html')
 
 @app.route('/')
 def home():
@@ -65,12 +72,13 @@ def home():
 
 @app.route('/markdown', methods = ['GET', 'POST'])
 def markdown():
-    form = PageDownFormExample()
+    form = PageDown()
     text = None
-    if form.validate():
-       text = form.pageDown.data
-    else:
+    if form.validate() == False:
         form.pageDown.data = ('Please enter here your note\n')
+
+    else:
+        text = form.pageDown.data
        # do something interesting with the Markdown text
     return render_template('markdown.html', form = form, text = text)
 
@@ -175,7 +183,7 @@ def login():
             msg = "No user found, please try again"
         else:
             session['username'] = request.form['username']
-            
+            session['id'] = user[0]
         return redirect(url_for('dashboard', username=request.form['username']))
        # else:
         #    flash('Wrong credentials inserted. Please try again')

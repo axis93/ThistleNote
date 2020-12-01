@@ -16,7 +16,7 @@
         </pre>
     </div>
     {% endif %}
-	{% block markdown %}
+	
 	<form action="/markdown"method="POST">
 		{{ form.csrf_token }}
         <div>
@@ -44,7 +44,7 @@ $(document.body).on('click', 'button', function() {
     $('div').html(bolded);
 });
 </script>
-{% endblock %}
+
 </body>
 
 </html>

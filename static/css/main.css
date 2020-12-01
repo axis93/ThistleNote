@@ -100,3 +100,19 @@ footer{
 }
 
 
+.pagedown { width: 40px; }
+.wmd-button, .wmd-spacer { display: none; }
+.wmd-input { width: 400px; height: 100px; }
+#wmd-preview { margin-bottom: 40px; background-color:  red;}
+
+
+
+    .wmd-button > span {
+        background-image: 
+          url('//cdn.rawgit.com/derobins/wmd/master/images/wmd-buttons.png');
+        background-repeat: no-repeat;
+        background-position: 0px 0px;
+        width: 20px;
+        height: 20px;
+        display: inline-block;
+    }
