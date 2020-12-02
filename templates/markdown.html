@@ -1,50 +1,35 @@
 <!DOCTYPE html>
+<!--- FUll code and credits at https://github.com/nikolas/markdown-toolbar.git --->
+
 <html>
 <head>
 
-        {{ pagedown.include_pagedown() }}
-
+	<link rel="stylesheet" 
+      href="//cdn.rawgit.com/balpha/pagedown/master/demo/browser/demo.css" />
+    <script src="//cdnjs.cloudflare.com/ajax/libs/pagedown/1.0/Markdown.Converter.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/pagedown/1.0/Markdown.Editor.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/pagedown/1.0/Markdown.Sanitizer.js"></script>
+    <title></title>
 </head>
 <body>
-    {% if text %}
-    <div>
-        <p>
-            Preview
-        </p>
-        <pre>
-            {{ text }}
-        </pre>
-    </div>
-    {% endif %}
-	
-	<form action="/markdown"method="POST">
-		{{ form.csrf_token }}
-        <div>
-        <b>{{ form.pageDown.label }}</b>
-        {{ form.pageDown(rows = 10) }}
-       <br>
-        </div>
-        <div>
-            {{ form.pageDown.label }}
-            {{ form.pageDown(only_preview=True) }}
-            
-        </div>
-        <button type="button">BOLD</button>
-         {{ form.submit }}
-    </form>
-    
-    <div></div>
-<script>
-$(document.body).on('click', 'button', function() {
 
-    var val=$('textarea').val();
-    var bolded=val.replace(/\*\*[A-z0-9]+\*\*/gi, '<span style="font-weight: bold; color: blue;">' + val + '</span>');
-    bolded = bolded.replace(/\*\*/gi, "");
-    
-    $('div').html(bolded);
-});
-</script>
+	{% block content %}
+	<h1>This is an example of an ideal app, as this has not been implemented by me. Please find reference to this project at this <a href="https://github.com/nikolas/markdown-toolbar">link</a></h1>
+    <h2>The page is not well styled, otherwise it would lose its functionalities. Please insert something into the text box to see some magic!</h2>
+<div id="wmd-button-bar"></div>
+<form  method="POST">
+<label>Title </label>
+			<input type="text" name="name" placeholder="Title" value="{{ request.form.name }}">
+<textarea id="wmd-input" class="wmd-input" name="body" value="{{ request.form.body }}"></textarea>
 
+<div id="wmd-preview" class="wmd-panel "></div>
+<pre id="wmd-preview"> </pre>
+<button action="/home" href="{{ url_for('home') }}">Home</button>
+{% endblock %}
 </body>
-
+<script>
+    var converter = Markdown.getSanitizingConverter();
+    var editor = new Markdown.Editor(converter);
+    editor.run();
+</script>
 </html>

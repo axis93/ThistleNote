@@ -2,8 +2,13 @@ body {
   margin: 0;
   font-family: Arial, Helvetica;
 	text-align: center;
+  background-color: #455265;
 }
+.body-text{
+  position: center;
+  padding: 30px; 
 
+}
 .topnav {
   overflow: hidden;
   background-color: #455265;
@@ -84,9 +89,43 @@ body {
   cursor: pointer;
 }
 
+.dash{
+  text-align: center;
+}
 .txt-bar{
 
 	background-color: #455265;
+}
+
+#logging{
+  position: right;
+}
+#body{
+  background-color: #1e2530;
+  color:#95a7b7;
+}
+#note{
+  background-color: #282a36;
+  position: absolute;
+  right: 1px;
+  height: 100%; 
+  float: right;
+  width: 47%;
+  color: #95a7b7;
+}
+#editor1{
+  background-color: #bdbdbd;
+  text-align: left;
+  width: 700px; height: 100%; 
+  float: left;
+  position: absolute;
+  left: 300px;
+  border-style:solid;
+  padding:2px;
+  color:  #282a36;
+}
+#side{
+  background-color: #455265;
 }
 footer{
 
@@ -99,7 +138,22 @@ footer{
   text-align:  center;
 }
 
+#contacts{
+  display: block;
+  position: relative;
+  left: 400px;
+  width: 800px;
+  height: 400px;
+}
+#message{
+  width: 700px;
+  height: 200px;
+}
+#lab{
+  width: 500px;
+  height: 50px;
 
+}
 .pagedown { width: 40px; }
 .wmd-button, .wmd-spacer { display: none; }
 .wmd-input { width: 400px; height: 100px; }

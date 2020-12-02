@@ -2,11 +2,11 @@
 	{% extends "base.html" %}
 	{% block title %} Login {% endblock %}
 	{% block content %}
+<div class="body-text">
+	<h3 class="alert alert-danger" role="alert"> {{ msg }} </h3>
 
-	result : {{ msg }}
-
-	<div id="login-form">
-		<form id="log"i action="/login"  method="POST">
+	<div id="login-form" class="col-md-12">
+		<form id="log" action="/login"  method="POST">
 			
 			<label>Username </label>
 			<input type="text" name="username" placeholder="Username" value="{{ request.form.username }}">
@@ -14,10 +14,10 @@
 			<label>Password</label>
 			<input type="password" name="Password" placeholder="Password" value="{{ request.form.password }}">
 
-			<button type="submit"> Login </button>
-
+			<button class="btn btn-light" type="submit"> Login </button>
+		</form>
 	</div>
 
-
+</div>
 	{% endblock %}
 </html>

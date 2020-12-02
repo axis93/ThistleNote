@@ -3,21 +3,19 @@
 {% extends "base.html" %}
 {% block title %} Home {% endblock %}
 {% block content %}
+<div class="body-text">
+	
 <h1> Welcome to ThistleNote, where taking notes becomes easier, faster and helps each student to have a very well structured set of notes. </h1>
 
-<h2> Do you have already an account? Then just log in </h2>
+<h2> Do you have already an account? Then just log in clicking on the navbar login button</h2>
 
 <h2> Do you not? What are you waiting for? Sign up now and start taking notes efficiently and store them as you never had! </h2>
 
 <p> Hey, we understand that you might thinking "Hold on a second what is it all about? You are going too fast for me!". That is why we decided to give you an insight about what we do and we are. Please do not hesitate to click on "About" or "Help" on the top bar to know more </p>
 
 
- {% for note in allnotes %}
-                <p>{{ note[0]}}</p>
-                <h3>{{ note[1] }}</h3>
-                <p> this is to show that this loop works </p>
-        {% endfor %}
 
-
+</div>
 {% endblock %}
+
 </html>

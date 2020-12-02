@@ -5,6 +5,7 @@
 		<link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
 		<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
 	</head>
+	{% extends "base.html" %}
 	{% block content %}
 	<body>
 	<fieldset class="txt-bar"> 
@@ -12,7 +13,7 @@
 		<button class="fontStyle" onclick="document.execCommand('italic',false,null);" title="ItalicizeHighlighted Text"> <i> I </i> </button>
 		<button class="fontStyle" onclick="document.execCommand( 'underline',false,null);"><u>U</u> </button>
 		<button class="fontStyle" onclick="document.execCommand( 'backColor', false, 'yellow');"> <b>H</b> </button>
-		<div class="dropdown">
+		<div class="dropdown dropdown-menu">
 			<button onclick="dropDown()" class="dropbtn">Fonts</button>
 			<div id="fontDropdown" class="dropD-content">
 				<a id="Georgia">Georgia</a>
@@ -20,24 +21,36 @@
 			</div>
 		</div>
 	</fieldset>
-<form class-"save" action="/note/" method="POST">
+<form class="save" action="/note/" method="POST">
 
-	<div id="editor1" placeholder="Please insert here your text" contenteditable="true" style="width: 75%; height: 100%; float: right;text-align:left; border-style:solid;padding:2px;" >
-		 <textarea name="body" placeholder="Please insert value here"  contenteditable="true"value="{{ request.form.body }}"></textarea> 
-	</div>
-
-	<div id="splitter">
-    <div>Area 1</div>
-    <div>Area 2</div>
-	<button> Make new folder </button>
+	<div id="editor1" placeholder="Please insert here your text" contenteditable="true" > Click on the buttons to change me! <a href"#"> link </a>
+		 
+	</div><textarea id="note" name="body" placeholder="Please insert notes here"   contenteditable="true"value="{{ request.form.body }}"></textarea> 
 </div>
-	<label>Title</label>
-	<input type="text" name="title" value="{{ request.form.title }}"> 
-<button type="submit" class="save" action="/note/" method="POST" > Save </button>
+	<label >Title</label>
+	<input type="text" name="title" value="{{ request.form.title }}" placeholder="Title"> 
+<button type="submit" class="btn save" action="/note/" method="POST" > Save </button>
 	</form>
-
+	<p>If you want to see what I would have loved<br> to implement and add to this app
+	please, <br>go <a href="/markdown">here</a> , it is a good example. <br>That is not my own workd, full credit in the <br>page</p>
 	{% endblock content %}
 	</body>
 	 <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+	 <script >function myFunction() {
+  document.getElementById("fontDropdown").classList.toggle("show");
+}
 
+// Close the dropdown if the user clicks outside of it
+window.onclick = function(event) {
+  if (!event.target.matches('.dropbtn')) {
+    var dropdowns = document.getElementsByClassName("dropD-content");
+    var i;
+    for (i = 0; i < dropdowns.length; i++) {
+      var openDropdown = dropdowns[i];
+      if (openDropdown.classList.contains('show')) {
+        openDropdown.classList.remove('show');
+      }
+    }
+  }
+}</script>
 </html>

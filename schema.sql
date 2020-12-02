@@ -11,6 +11,7 @@ CREATE TABLE users(
 
 CREATE TABLE notes(
 
+	ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
 	title_name VARCHAR(255),
 	note_body TEXT,
 	user_id, INTEGER,
@@ -18,6 +19,6 @@ CREATE TABLE notes(
 );
 
 
-
-INSERT INTO notes (title_name, note_body) VALUES ('my first note', 'This is my first note to check if that works');
-insert into notes (title_name, note_body) values ('my second note', 'This is my second note');
+INSERT INTO users (id, user_name, user_email, user_password) VALUES (1, 'spukaxis', 'spuk@gmail.com', 'pass');
+INSERT INTO notes (id, title_name, note_body, user_id) VALUES (1,'my first note', 'This is my first note to check if that works', 1);
+insert into notes (id, title_name, note_body, user_id) values (2, 'my second note', 'This is my second note', 1);

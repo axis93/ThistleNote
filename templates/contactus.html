@@ -3,7 +3,7 @@
 	{% block title %} Contact us {% endblock  %}
 	
 	{% block content %}
-
+<div class="body-text">
 	<h1>Hi! if you are here it is because you want to contact us and this is great! </h1>
 	<p> Please send us an email using the form below and we will contact you back as soon as possible. We take any feedback as the best way to optimise our job and to maximize our users' experience. Please let us know what we do wrong, what we need to work on, all the issues you have with the website, and we will do the best to improve and sort your problems out.</p>
 	<p>Please bear in mind that our team is small at the moment and we might encounter in difficulties to reply to your email, but we will try to reply ASAP. </p>
@@ -12,7 +12,9 @@
 	<h2>Contact</h2>
 	
 	{% if success %}
-		<p> Thank you for you message. We will contact you back as soon as possible </p>
+		<p> {{ msg }} </p>
+		
+
 	{% else %}
 		{% for message in form.name.errors %}
 			<div class="flash"> {{ message }} </div>
@@ -30,22 +32,27 @@
                         <div class="flash"> {{ message }} </div>
                 {% endfor %}
 
-		<form action="{{ url_for('contact') }}" method=post>
-			{{ form.name.label }}
-			{{ form.name }}
+		<form action="{{ url_for('contact') }}" method="POST">
+			<div clas="form-group row" id="contacts">
+			
+   				<div class="col-sm-10" id="message">
+					{{ form.hidden_tag() }}
+				{{ form.name.label }}
+					<div id="lab">	{{ form.name }}</div>
 
-			{{ form.email.label }}
-			{{ form.email }}
+					{{ form.email.label }}
+				<div id="lab">	{{ form.email }}</div>
 
-			{{ form.subject.label }}
-			{{ form.subject }}
+					{{ form.subject.label }}
+					<div id="lab">{{ form.subject }}</div>
 
-			{{ form.message.label }}
-			{{ form.message }}
+					{{ form.message.label }}
+				<div id="message">{{ form.message }} </div>
+					<button class="btn">{{ form.submit }}</button>
 
-			{{ form.submit }}
+			</div>
 		</form>
-
+</div>
 	{% endif %}
 	{% endblock %}
 </html>

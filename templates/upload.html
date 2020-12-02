@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+{% extends "base.html" %}
+<head>
+	<title>Upload</title>
+</head>
+<body>{% block content %}
+	<div class="body-text">
+		<h1>Please bear in mind that the file you upload will be just rendered in the next page, and you will need to press the back arrow to go back to the app. Please upload only PDF files.</h1>
+		<br><br><br><br>
+		<form action="" method="post" name="form" enctype="multipart/form-data">
+            <input type="file" name="datafile" />
+            <input class="btn btn-light"type="submit" name="submit" id="submit" class="btn"/>
+        </form>
+        <button class="btn" action="/dashboard">Back</button>
+        </div>
+{% endblock %}
+</body>
+</html>

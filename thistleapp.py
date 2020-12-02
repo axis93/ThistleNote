@@ -7,11 +7,12 @@ import sqlite3
 import os
 from forms import ContactForm, PageDown
 from flask_mail import Message, Mail
-
+from wtforms import Form
 from flask_pagedown import PageDown
 from flask_pagedown.fields import PageDownField
-
-
+import json
+import os.path
+from os import path
 app = Flask(__name__)
 
 
@@ -56,9 +57,19 @@ def init_db():
         with app.open_resource('schema.sql', mode='r') as f:
             db.cursor().executescript(f.read())
         db.commit()
-@app.route('/some')
+
+@app.route('/markdown/', methods=['GET', 'POST'])
 def some():
-    return render_template('some.html')
+    if request.method == 'POST':
+        return redirect(url_for('home'))
+     #   title = request.form.get(['name'])
+      #  body = request.form.get(['body'])
+       # file = os.save(app.config['ACCOUNT_FOLDERS'], session['username'], tile, '.md')
+        #with open(file, "w") as f:
+         #   f.write(body)
+        #return render_template('some.html')
+
+    return render_template('markdown.html')
 
 @app.route('/')
 def home():
@@ -74,11 +85,8 @@ def home():
 def markdown():
     form = PageDown()
     text = None
-    if form.validate() == False:
-        form.pageDown.data = ('Please enter here your note\n')
-
-    else:
-        text = form.pageDown.data
+    
+    text = form.pageDown
        # do something interesting with the Markdown text
     return render_template('markdown.html', form = form, text = text)
 
@@ -86,23 +94,23 @@ def markdown():
 @app.route('/contactus', methods=['GET', 'POST'])
 def contact():
     form = ContactForm()
-
+    msg = ""
     if request.method == 'POST':
         if form.validate() == False:
-            flash('All fields are required. Please fill in the form.')
+            msg = 'All fields are required. Please fill in the form.'
             return render_template('contactus.html', form=form)
         else:
-            msg = Message(form.subject.data, sender=form.email.data, recipients=['simone.piazzini@gmail.com'])
-            msn.body= """
-            From: %s &lt;%s&gt;
-            %s
-            """ % (form.name.data, form.email.data, form.message.data)
-            mail.send(msg)
-
-            return render_template('contactus.html', success=True)
+            name = request.form['name']
+            email = request.form['email']
+            subject = request.form['subject']
+            message = request.form['message']
+            with open('static/messages/messages.json', 'a') as f:
+                json.dump(request.form, f)
+            msg = "Thanks we received your email"
+            return render_template('contactus.html', msg = msg, success=True)
         
     elif request.method == 'GET':
-        return render_template('contactus.html', form = form)
+        return render_template('contactus.html', form = form, msg = msg)
 
 @app.route('/help/')
 def help():
@@ -114,7 +122,10 @@ def about():
    # db.cursor().execute('insert into notes (title_name,  
     return render_template('about.html')
 
-@app.route('/note/', methods=['POST','GET', 'PUT', 'DELETE'])
+
+
+
+@app.route('/note/', methods=['POST','GET'])
 def note():
     db = get_db()
     if request.method == 'POST':
@@ -123,10 +134,11 @@ def note():
         updated = datetime.now()
         note_body = request.form.get("body")
         user_id = session['id']
-        db.cursor().execute('insert into notes (title_name, note_body, user_id) VALUES (?,?, ?)', (new_title_name, note_body, user_id))
+        db.cursor().execute('insert into notes (title_name, note_body, user_id) VALUES (?,?,?)', (new_title_name, note_body, user_id))
 
         db.commit()
         return redirect(url_for('dashboard', username=session['username']))
+    
     # I would like to store the file permanently on the server too
    # db = get_db()
    # note = None
@@ -150,13 +162,10 @@ def note():
       #  db.cursor().execute('UPDATE note SET title_name=?, update=? WHERE id=?', [id])        
        # db.commit()
         #return "The note has been updated", 200
-
-    if request.method == 'DELETE':
-        db.cursor().execute('DELETE from notes where id=?', [id])
-        db.commit()
-        return redirect(url_for('dashboard.html', username=sesssion['username']))
     return render_template('notes.html')
-
+@app.route('/note/edit/<id>', methods=['GET', 'POST'])
+def edit():
+    db = get_db
 
 @app.route('/<username>/dashboard/', methods=['GET', 'POST'])
 def dashboard(username):
@@ -166,8 +175,11 @@ def dashboard(username):
         
         # I would like to store the file permanently on the server too
     if request.method == 'GET':
-        notes = db.cursor().execute('SELECT * FROM notes').fetchall()
-        
+        user = db.cursor().execute('SELECT * from users where user_name = ?', [username]).fetchone()
+        id = user[0]
+        session['id'] = id
+        notes = db.cursor().execute('SELECT * FROM notes WHERE user_id = ?', [id]).fetchall()
+
         return render_template('dashboard.html', allnotes=notes)
    # return render_template('dashboard.html', allnotes=allnotes)
 
@@ -176,29 +188,33 @@ def login():
     if request.method == 'POST':
         db = get_db()
         username = request.form.get("username")
-        email = request.form.get("email")
-        
-        user = db.cursor().execute('select * from users where user_name = ?', [username])
+        password = request.form.get("password")
+        if not username or not password:
+            msg = "Please enter email and passowrd"
+        cur = db.cursor()
+        cur.execute('SELECT * from users where user_name = ?', [username])
+        user = cur.fetchone()
         if user is None:
             msg = "No user found, please try again"
         else:
-            session['username'] = request.form['username']
+            session['username'] = username
             session['id'] = user[0]
-        return redirect(url_for('dashboard', username=request.form['username']))
+
+            return redirect(url_for('dashboard', username=request.form['username']))
        # else:
         #    flash('Wrong credentials inserted. Please try again')
          #   return render_template('login.html')
     else:
-        if session != None:
-            msg = "We are sorry but you are logged in already, I am afraid you will not be able to login until you first logout"
+        
+            msg = "Please enter your details to login. You username should be enough"
 
-    return render_template('login.html')
+    return render_template('login.html', msg = msg)
 
 @app.route('/logout')
 def logout():
     session.pop('username', None)
     session['username'] = None 
-    return render_template('home.html')
+    return render_template('home.html'), 200
 
 @app.route('/signup', methods=['GET','POST'])
 def signup():
@@ -208,16 +224,25 @@ def signup():
         username = request.form.get("username")
         email = request.form.get("email")
         password = request.form.get("password")
-        if not email or not password:
-            return "You have missed something, please try again"
-        new_dir = os.path.join(app.config['ACCOUNT_FOLDERS'], username)
-        os.mkdir(new_dir)
+        if not email or not password or not username:
+            msg = "Please enter all the fields"
+            return render_template('signup.html', msg = msg)
+        cur = db.cursor()
+        cur.execute('SELECT * from users where user_name = ?', [username])
+        user = cur.fetchone()
+        if user is not None:
+            msg = "User exists, please try again"
+            return render_template('signup.html', msg = msg)
+    
         db.cursor().execute('insert into users (user_name, user_email, user_password) VALUES (?,?,?)', (username, email, password) )
         db.commit()
+        new_dir = os.path.join(app.config['ACCOUNT_FOLDERS'], username)
+        os.mkdir(new_dir)
         msg = "You have created the user: " + username
         return render_template('login.html', msg = msg)
         
-    return render_template('signup.html')
+    msg = "Please enter your new credentials"
+    return render_template('signup.html', msg = msg), 200
 
 
 def allowed_file(filename):
@@ -233,17 +258,8 @@ def upload():
         flash('You have successfully uploaded a file')
         return send_from_directory('static/uploads/', f )
     else:
-        page='''
-        <html>
-        <body>
-        <form action="" method="post" name="form" enctype="multipart/form-data">
-            <input type="file" name="datafile" />
-            <input type="submit" name="submit" id="submit" />
-        </form>
-        </body>
-        </html>
-        '''
-        return page, 200
+
+        return render_template("upload.html"), 200
 
 
 @app.route('/uploads/file')
